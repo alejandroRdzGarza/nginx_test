@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    volumes:
+      - ./node-app:/usr/src/app
+    environment:
+      - NODE_ENV=production
+    networks:
+      - webnet
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile # Or nginx.Dockerfile if you named it so
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+    networks:
+      - webnet
+
+networks:
+  webnet:
